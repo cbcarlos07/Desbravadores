@@ -1,0 +1,67 @@
+DELIMITER $$
+
+  DROP TRIGGER IF EXISTS `desbravador`.`TRG_CAD_DIVISAO` $$
+     CREATE TRIGGER `desbravador`.`TRG_CAD_DIVISAO` BEFORE INSERT ON DIVISAO
+        FOR EACH ROW
+          BEGIN
+            SET @NOVA   = NEW.NM_DIVISAO;
+            SET @SIGLA  = NEW.NM_SIGLA;
+            SET @EXISTE_DIV   = (SELECT COUNT(*) FROM DIVISAO D WHERE D.NM_DIVISAO LIKE @NOVA );
+            SET @EXISTE_SIGLA = (SELECT COUNT(*) FROM DIVISAO D WHERE D.NM_SIGLA LIKE @SIGLA );
+            IF (@EXISTE_DIV > 0 ) THEN
+               SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Divisão já cadastrada anteriormente';
+            ELSEIF (@EXISTE_SIGLA > 0) THEN
+               SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Divisão já cadastrada anteriormente';
+            END IF;
+          END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS `desbravador`.`TRG_CAD_UNIAO` $$
+CREATE TRIGGER `desbravador`.`TRG_CAD_UNIAO` BEFORE INSERT ON UNIAO
+FOR EACH ROW
+BEGIN
+            SET @NOVA   = NEW.NM_UNIAO;
+            SET @SIGLA  = NEW.NM_SIGLA;
+            SET @EXISTE_DIV   = (SELECT COUNT(*) FROM UNIAO D WHERE D.NM_UNIAO LIKE @NOVA );
+            SET @EXISTE_SIGLA = (SELECT COUNT(*) FROM UNIAO D WHERE D.NM_SIGLA LIKE @SIGLA );
+            IF (@EXISTE_DIV > 0 ) THEN
+              SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Divisão já cadastrada anteriormente';
+            ELSEIF (@EXISTE_SIGLA > 0) THEN
+              SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Sigla já informada anteriormente';
+            END IF;
+
+END $$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS `desbravador`.`TRG_ALT_ASSOCIACAO` $$
+CREATE TRIGGER `desbravador`.`TRG_ALT_ASSOCIACAO` BEFORE UPDATE ON ASSOCIACAO
+FOR EACH ROW
+BEGIN
+            SET @NOVA   = NEW.NM_ASSOCIACAO;
+            SET @SIGLA  = NEW.NM_SIGLA;
+            SET @EXISTE_DIV   = (SELECT COUNT(*) FROM ASSOCIACAO D WHERE D.NM_ASSOCIACAO LIKE @NOVA );
+            SET @EXISTE_SIGLA = (SELECT COUNT(*) FROM ASSOCIACAO D WHERE D.NM_SIGLA LIKE @SIGLA );
+            IF (@EXISTE_DIV > 0 ) THEN
+              SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Associação já cadastrada anteriormente';
+            ELSEIF (@EXISTE_SIGLA > 0) THEN
+              SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Sigla já informada anteriormente';
+            END IF;
+
+END $$
+
+DELIMITER ;
+
+
+mysql -u root mysql
+
+use mysql;
+UPDATE user SET Password = PASSWORD('123') WHERE User = 'root';
+flush privilges;
+exit;

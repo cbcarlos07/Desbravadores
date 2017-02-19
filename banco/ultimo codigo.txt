@@ -1,0 +1,3 @@
+final String sql = "INSERT ..."
+stmt = conn.preparedStatement(sql, Statement.RETURN_GENERATE_KEYS);
+resultset = ps.getGeneratedKeys();
