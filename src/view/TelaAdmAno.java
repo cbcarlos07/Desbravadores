@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package view;
-//kk/
+
 import controller.Ano_Controller;
 import java.awt.Cursor;
 import java.util.Iterator;
